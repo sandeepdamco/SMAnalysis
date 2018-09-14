@@ -38,6 +38,9 @@ try
 {
 var test = value.innerHTML;
 var row={};
+
+buystring= $(test).find('.buy')[0].innerHTML;
+sellstring= $(test).find('.sell')[0].innerHTML;
 row.Open=test.split("<label>Open</label> <span class=\"value\">")[1].split("</span>")[0];
 row.High=test.split("<label>High</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Low=test.split("<label>Low</label> <span class=\"value\">")[1].split("</span>")[0];
@@ -46,6 +49,8 @@ row.Volume=test.split("<label>Volume</label> <span class=\"value\">")[1].split("
 row.AvgPrice=test.split("<label>Avg. price</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Name=test.split("<span class=\"nice-name\">")[1].split("</span>")[0];
 row.LastPrice=test.split("<span class=\"last-price\">")[1].split("</span>")[0];
+row.buycolumn=buystring;
+row.sellColumn=sellstring;
 var orderColumn = test.split('</table>');
 var buycolumn= orderColumn[0];
 var sellColumn= orderColumn[1];
