@@ -46,6 +46,7 @@ row.High=test.split("<label>High</label> <span class=\"value\">")[1].split("</sp
 row.Low=test.split("<label>Low</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Close=test.split("<label>Close</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Volume=test.split("<label>Volume</label> <span class=\"value\">")[1].split("</span>")[0];
+row.Volume =row.Volume.replace(',','');
 row.AvgPrice=test.split("<label>Avg. price</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Name=test.split("<span class=\"nice-name\">")[1].split("</span>")[0];
 row.LastPrice=test.split("<span class=\"last-price\">")[1].split("</span>")[0];
@@ -55,8 +56,9 @@ var orderColumn = test.split('</table>');
 var buycolumn= orderColumn[0];
 var sellColumn= orderColumn[1];
 row.BuyOrders=buycolumn.split('<tfoot><tr><td>Total</td> <td colspan=\"2\" class=\"text-right\">')[1].split('</td>')[0];
+row.BuyOrders =row.BuyOrders.replace(',','');
 row.SellOrders=sellColumn.split('<tfoot><tr><td>Total</td> <!----> <td colspan=\"2\" class=\"text-right\">')[1].split('</td>')[0];
-console.log(row);
+row.SellOrders = row.SellOrders.replace(',','');
 list.push(row);
 }
 catch{}
