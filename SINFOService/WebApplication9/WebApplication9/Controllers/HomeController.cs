@@ -27,15 +27,17 @@ namespace WebApplication9.Controllers
         private void BulkInsertionToDataBase(List<row> list)
         {
             DataTable dtProductSold = ToDataTable<row>(list);
-            using (SqlConnection con = new SqlConnection("Data Source=WKS-337\\SQLEXPRESS;Initial Catalog=SM;User ID=sa;Password=damco"))
+            //using (SqlConnection con = new SqlConnection("Data Source=WKS-337\\SQLEXPRESS;Initial Catalog=SM;User ID=sa;Password=damco"))
             {
-                con.Open();
-                SqlBulkCopy objbulk = new SqlBulkCopy(con);
-                objbulk.DestinationTableName = "SInfo";
-                foreach (DataColumn column in dtProductSold.Columns)
-                    objbulk.ColumnMappings.Add(column.ColumnName, column.ColumnName);
-                objbulk.WriteToServer(dtProductSold);
-                con.Close();
+                //con.Open();
+                using (SqlBulkCopy objbulk = new SqlBulkCopy("Data Source=WKS-337\\SQLEXPRESS;Initial Catalog=SM;User ID=sa;Password=damco", SqlBulkCopyOptions.FireTriggers))
+                {
+                    objbulk.DestinationTableName = "SInfo";
+                    foreach (DataColumn column in dtProductSold.Columns)
+                        objbulk.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                    objbulk.WriteToServer(dtProductSold);
+                }
+                //con.Close();
             }
         }
 
