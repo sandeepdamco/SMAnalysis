@@ -9,3 +9,6 @@ SInfoExecute/.vs/SInfoExecute/v15/sqlite3/*
 SINFOService/WebApplication9/.vs/WebApplication9/v15/sqlite3/storage.ide
 SINFOService/WebApplication9/.vs/config/applicationhost.config
 SINFOService/WebApplication9/.vs/config/applicationhost.config
+DBBackupUtility/DBBackupUtility/bin/*
+DBBackupUtility/DBBackupUtility/obj/*
+DBBackupUtility/packages/*
