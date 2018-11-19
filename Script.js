@@ -80,3 +80,43 @@ $.ajax({
 }
 }
 test()
+
+
+$($('.instruments').find('.price')).click()
+setTimeout(function(){
+$('.mobile-context-menu-list li:nth-child(1) a span').attr('id','test')
+$('#test').click()
+setTimeout(function(){
+$('.row-4 a').click()
+$('.varieties [title="Bracket order"] input').click()
+$('.content .quantity .su-input-group input').value="200"
+$('.content .price .su-input-group input').value="2046.5"
+$('.content .stoploss-price .su-input-group input').value="3"
+$('.content .squareoff-price .su-input-group input').value="3"
+$('.content .actions button.button-blue').click()
+},1000)
+},1000)
+
+
+
+$($('.instruments').find('.price')).click()
+setTimeout(function(){
+$('.mobile-context-menu-list li:nth-child(1) a span').attr('id','test')
+$('#test').click()
+setTimeout(function(){
+if($('.row-4 a').length>0)
+{
+$('.row-4 a')[0].click()
+}
+setTimeout(function(){
+$('.varieties [title="Bracket order"] input')[0].click()
+$('.content .quantity .su-input-group input')[0].value="200"
+$('.content .price .su-input-group input')[0].value="2046.5"
+$('.content .stoploss-price .su-input-group input')[0].value="3"
+$('.content .squareoff-price .su-input-group input')[0].value="3"
+setTimeout(function(){
+$('.content .actions button.button-blue').click()
+},100)
+},100)
+},100)
+},100)
