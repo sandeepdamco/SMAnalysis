@@ -1,6 +1,3 @@
-item = $('.instruments').find('.price');
-count =0;
-totalLength = item.length;
 function openMarketWatch()
 {
 
@@ -17,17 +14,18 @@ $(item[count]).trigger('click');
 count =count +1
 setTimeout(function(){ if(totalLength+2>count) openMarketWatch() }, 1000);
 }
-openMarketWatch();
-
 
 var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = 'https://code.jquery.com/jquery-1.12.4.min.js';
 document.head.appendChild(script)
-
-
-
-
+script.onload = function() {
+	item = $('.instruments').find('.price');
+	count =0;
+	totalLength = item.length;
+     openMarketWatch();
+	 test()
+};
 
 function test() {
     var list =[];
@@ -76,10 +74,11 @@ $.ajax({
   dataType:  function(){}
 });
 
-	setTimeout(test, 3000);
+	
 }
+setTimeout(test, 3000);
 }
-test()
+
 
 
 $($('.instruments').find('.price')).click()
@@ -89,19 +88,20 @@ $('#test').click()
 setTimeout(function(){
 $('.row-4 a').click()
 $('.varieties [title="Bracket order"] input').click()
-$('.content .quantity .su-input-group input').value="200"
+$('.content .quantity .su-input-group input').value="0"
 $('.content .price .su-input-group input').value="2046.5"
 $('.content .stoploss-price .su-input-group input').value="3"
 $('.content .squareoff-price .su-input-group input').value="3"
-$('.content .actions button.button-blue').click()
+//$('.content .actions button.button-blue').click()
 },1000)
 },1000)
 
+//$($('.instruments').find('.nice-name'))
+//$($('.instruments').find('.price'))
 
-
-$($('.instruments').find('.price')).click()
+$($('.instruments').find('.nice-name:contains("BHARTIARTL")')).click()
 setTimeout(function(){
-$('.mobile-context-menu-list li:nth-child(1) a span').attr('id','test')
+$('.mobile-context-menu-list li:nth-child(2) a span').attr('id','test')
 $('#test').click()
 setTimeout(function(){
 if($('.row-4 a').length>0)
@@ -115,8 +115,8 @@ $('.content .price .su-input-group input')[0].value="2046.5"
 $('.content .stoploss-price .su-input-group input')[0].value="3"
 $('.content .squareoff-price .su-input-group input')[0].value="3"
 setTimeout(function(){
-$('.content .actions button.button-blue').click()
+//$('.content .actions button.button-blue').click()
 },100)
-},100)
+},300)
 },100)
 },100)

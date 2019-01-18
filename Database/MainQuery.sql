@@ -1,6 +1,23 @@
-Declare @smName varchar(1000),
-@AddedDate datetime ='2018-12-18 15:20:54.480'
 
+Declare @query varchar(max),@name varchar(100)
+Declare @NonClusteredName varchar(200) 
+
+DECLARE db_cursor CURSOR FOR 
+select name from sys.tables Order By name
+OPEN db_cursor  
+FETCH NEXT FROM db_cursor INTO @name  
+
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+
+
+set @NonClusteredName=NewId();
+
+set  @query = '
+Declare @smName varchar(1000),
+@AddedDate datetime =Replace('''+@name+''','' '',''-'') +'' 15:20:54.480''
+
+	
 Declare @table table
 (
 Name varchar(50),
@@ -17,19 +34,17 @@ ClosePrice varchar(500),
 Volume varchar(500)
 )
 
-insert into @table (Name,BuyCount,SellCount,BuyMinPrice,BuyMaxPrice,SellMinPrice,SellMaxPrice,LowPrice,ClosePrice,HighPrice,OpenPrice,Volume)
-values('','Buy Count','Sell Count',' BuyMin','BuyMax','SellMin','SellMax','Low','Close','High','Open','Volume')
-		
+	
 DECLARE emp_cursor CURSOR FOR     
-SELECT distinct Name from [dbo].[sinfo8] 
---where name like '%IRB%'
+SELECT distinct Name from [dbo].['+@name+'] 
+
 OPEN emp_cursor    
   
 FETCH NEXT FROM emp_cursor     
 INTO @smName
 WHILE @@FETCH_STATUS = 0    
 BEGIN    
-IF OBJECT_ID('tempdb..#temp') IS NOT NULL
+IF OBJECT_ID(''tempdb..#temp'') IS NOT NULL
     DROP TABLE #temp
 
 Declare @buycount varchar(100),
@@ -46,19 +61,16 @@ Declare @buycount varchar(100),
 @Percen varchar(100)
 
 print @SMNAME
-select ROW_NUMBER() over(Order by addeddate) as rnumn ,REPLACE(volume,',','') as volumn1 ,*  into #temp from [dbo].[sinfo8] where name=@smName and Volume!='NA'
-AND AddedDate >@AddedDate AND BuyOrders!='0' AND SellOrders!='0'
+select ROW_NUMBER() over(Order by addeddate) as rnumn ,REPLACE(volume,'','','''') as volumn1 ,*  into #temp from [dbo].['+@name+'] where name=@smName and Volume!=''NA''
+AND AddedDate >@AddedDate AND BuyOrders!=''0'' AND SellOrders!=''0''
 
---select * from #temp
+
 
 select @buycount= sum(trade) from (
 select case when t1.LastPrice>t2.LastPrice then -1 else 1 end as buy, CONVERT(int,t2.volumn1)-CONVERT(int, t1.volumn1) as trade from #temp as t1 inner join #temp as t2 
 on t1.rnumn+1=t2.rnumn
 where CONVERT(int,t2.volumn1-CONVERT(int, t1.volumn1))>0 ) as t2  where buy=1 
-
---select case when t1.LastPrice>t2.LastPrice then -1 else 1 end as buy, CONVERT(int,t2.volumn1)-CONVERT(int, t1.volumn1) as trade from #temp as t1 inner join #temp as t2 
---on t1.rnumn+1=t2.rnumn
---where CONVERT(int,t2.volumn1-CONVERT(int, t1.volumn1))>0
+ 
 
 select @sellcount= sum(trade) from (
 select case when t1.LastPrice>t2.LastPrice then -1 else 1 end as buy, CONVERT(int,t2.volumn1)-CONVERT(int, t1.volumn1) as trade from #temp as t1 inner join #temp as t2 
@@ -102,9 +114,23 @@ END
 CLOSE emp_cursor;    
 DEALLOCATE emp_cursor;  
 
-select *,case when name!= '' then CONVERT(decimal,BuyCount)- convert(decimal,SellCount) else 0 end as Difference
-,case when name!= '' AND CONVERT(decimal(9,2),BuyCount) >0 then convert(decimal(9,2),(CONVERT(decimal(9,2),BuyCount)- convert(decimal(9,2),SellCount))/CONVERT(decimal(9,2),BuyCount)) else 0 end as Difference
-,case when name!= '' AND CONVERT(decimal(9,2),SellCount) >0 then convert(decimal(9,2),(CONVERT(decimal(9,2),SellCount)- convert(decimal(9,2),BuyCount))/CONVERT(decimal(9,2),SellCount)) else 0 end as DifferenceSell
- from @table
+insert into temp24
+SELECT '''+Replace(@name,' ','')+''', * FROM (
+select *,case when name!= '''' then CONVERT(decimal,BuyCount)- convert(decimal,SellCount) else 0 end as Difference
+,case when name!= '''' AND CONVERT(decimal(16,2),BuyCount) >0 then convert(decimal(16,2),(CONVERT(decimal(16,2),SellCount)- convert(decimal(16,2),BuyCount))/CONVERT(decimal(16,2),BuyCount)) else 0 end as Difference1
+,case when name!= '''' AND CONVERT(decimal(16,2),SellCount) >0 then convert(decimal(16,2),(CONVERT(decimal(16,2),BuyCount)- convert(decimal(16,2),SellCount))/CONVERT(decimal(16,2),SellCount)) else 0 end as DifferenceSell
+ from @table) AS T1
+ WHERE T1.Difference1>0.5 OR DifferenceSell>2
+  '
 
-Order By Name
+print @query
+exec (@query)
+	  
+      FETCH NEXT FROM db_cursor INTO @name 
+END 
+
+CLOSE db_cursor  
+DEALLOCATE db_cursor 
+
+
+--select * from temp24
