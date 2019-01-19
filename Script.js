@@ -19,6 +19,7 @@ var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = 'https://code.jquery.com/jquery-1.12.4.min.js';
 document.head.appendChild(script)
+data =[];
 script.onload = function() {
 	item = $('.instruments').find('.price');
 	count =0;
@@ -36,17 +37,18 @@ try
 {
 var test = value.innerHTML;
 var row={};
-
+row.Volume=test.split("<label>Volume</label> <span class=\"value\">")[1].split("</span>")[0];
+row.Volume =row.Volume.replace(/,/g, '');
+row.Name=test.split("<span class=\"nice-name\">")[1].split("</span>")[0];
+if(data[row.Name] == undefined || data[row.Name].Volume!=row.Volume)
+{
 buystring= $(test).find('.buy')[0].innerHTML;
 sellstring= $(test).find('.sell')[0].innerHTML;
 row.Open=test.split("<label>Open</label> <span class=\"value\">")[1].split("</span>")[0];
 row.High=test.split("<label>High</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Low=test.split("<label>Low</label> <span class=\"value\">")[1].split("</span>")[0];
 row.Close=test.split("<label>Close</label> <span class=\"value\">")[1].split("</span>")[0];
-row.Volume=test.split("<label>Volume</label> <span class=\"value\">")[1].split("</span>")[0];
-row.Volume =row.Volume.replace(new RegExp(','), '');
 row.AvgPrice=test.split("<label>Avg. price</label> <span class=\"value\">")[1].split("</span>")[0];
-row.Name=test.split("<span class=\"nice-name\">")[1].split("</span>")[0];
 row.LastPrice=test.split("<span class=\"last-price\">")[1].split("</span>")[0];
 row.buycolumn=buystring;
 row.sellColumn=sellstring;
@@ -54,10 +56,12 @@ var orderColumn = test.split('</table>');
 var buycolumn= orderColumn[0];
 var sellColumn= orderColumn[1];
 row.BuyOrders=buycolumn.split('<tfoot><tr><td>Total</td> <td colspan=\"2\" class=\"text-right\">')[1].split('</td>')[0];
-row.BuyOrders =row.BuyOrders.replace(new RegExp(','), '');;
+row.BuyOrders =row.BuyOrders.replace(/,/g, '');
 row.SellOrders=sellColumn.split('<tfoot><tr><td>Total</td> <!----> <td colspan=\"2\" class=\"text-right\">')[1].split('</td>')[0];
-row.SellOrders = row.SellOrders.replace(new RegExp(','), '');;
+row.SellOrders = row.SellOrders.replace(/,/g, '');
 list.push(row);
+data[row.Name] = row;
+}
 }
 catch{}
 });
